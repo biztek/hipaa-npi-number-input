@@ -1,0 +1,80 @@
+<!doctype html>
+
+<html>
+
+<head>
+  <title>hipaa-npi-number-input test</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+
+  <link rel="import" href="../hipaa-npi-number-input.html">
+</head>
+
+<body>
+
+  <test-fixture id="basic">
+    <template>
+      <hipaa-npi-number-input></hipaa-npi-number-input>
+    </template>
+  </test-fixture>
+  <test-fixture id="noNpiNumber">
+    <template>
+      <hipaa-npi-number-input value="" auto-validate></hipaa-npi-number-input>
+    </template>
+  </test-fixture>
+  <test-fixture id="validNpiNumber">
+    <template>
+      <hipaa-npi-number-input value="1245319599" auto-validate="true"></hipaa-npi-number-input>
+    </template>
+  </test-fixture>
+  <test-fixture id="invalidNpiNumber">
+    <template>
+      <hipaa-npi-number-input value="1231231231" auto-validate="true"></hipaa-npi-number-input>
+    </template>
+  </test-fixture>
+
+  <script>
+    suite('hipaa-npi-number-input', function() {
+      let element, npiinput, input;
+      test('instantiating the element works', function() {
+        element = fixture('basic');
+        assert.equal(element.is, 'hipaa-npi-number-input');
+      });
+      test('setting some value for npinumber and checking the value sets properly', function() {
+        npiinput = Polymer.dom(element.root).querySelector('#input');
+        npiinput.value = '1234567891';
+        assert.equal(npiinput.value, '1234567891');
+      });
+      test('setting invalid value for npinumber and check the validation message', function() {
+        npiinput = Polymer.dom(element.root).querySelector('#input');
+        npiinput.value = '1234567891';
+        npiinput.validate();
+        assert.equal(npiinput.errorMessage, 'NPI Number is invalid');
+      });
+      test('npinumber value is not set and checking invalid is true', function() {
+        input = fixture('noNpiNumber');
+        input.validate();
+        assert.isTrue(input.invalid, 'input is invalid');
+      });
+      test('npinumber value is not set will throw errorMessage', function() {
+        input = fixture('invalidNpiNumber');
+        input.validate();
+        assert.equal(input.errorMessage, 'NPI Number is invalid');
+      });
+      test('valid npinumber is set and checking invalid is false', function() {
+        input = fixture('validNpiNumber');
+        input.validate();
+        assert.isFalse(input.invalid, 'NPI Number is valid');
+      });
+      test('invalid npinumber is set and checking invalid is true', function() {
+        input = fixture('invalidNpiNumber');
+        input.validate();
+        assert.isTrue(input.invalid, 'NPI Number is invalid');
+      });
+    });
+  </script>
+</body>
+
+</html>

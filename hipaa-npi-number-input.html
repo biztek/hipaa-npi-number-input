@@ -1,0 +1,105 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-input/paper-input.html">
+
+<!--
+`hipaa-npi-number-input`
+
+
+@demo demo/index.html
+-->
+
+<dom-module id="hipaa-npi-number-input">
+  <template>
+    <style>
+       :host {
+        display: block;
+      }
+    </style>
+    <paper-input id="input" label="[[label]]" value="{{value}}" required="[[required]]" auto-validate="[[autoValidate]]" invalid="{{invalid}}" pattern="[[pattern]]" maxlength="[[maxlength]]" error-message="[[errorMessage]]">
+    </paper-input>
+  </template>
+
+  <script>
+    Polymer({ //jshint ignore:line
+      is: 'hipaa-npi-number-input',
+      properties: {
+        label: {
+          type: String,
+          value: 'NPI Number'
+        },
+        errorMessage: {
+          type: String,
+          value: 'NPI Number is invalid'
+        },
+        value: {
+          type: String,
+          notify: true,
+          observer: '_valueChanged'
+        },
+        invalid: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+        autoValidate: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+        required: {
+          type: Boolean,
+          value: false
+        },
+        pattern: {
+          type: String,
+          value: '^[0-9]{10}$'
+        },
+        maxlength: {
+          type: Number,
+          value: 10
+        }
+      },
+      _valueChanged: function() {
+        if (this.autoValidate) {
+          this.validate();
+        }
+      },
+      validate: function() {
+        let npi = this.value;
+        if (npi) {
+          let tmp, sum, i, j;
+          i = npi.length;
+          if ((i === 15) && (npi.indexOf('80840', 0, 5) === 0))
+            sum = 0;
+          else if (i === 10)
+            sum = 24;
+          else {
+            this.set('invalid', true);
+            return this.invalid;
+          }
+          j = 0;
+          while (i !== 0) {
+            tmp = npi.charCodeAt(i - 1) - '0'.charCodeAt(0);
+            if ((j++ % 2) !== 0) {
+              if ((tmp <<= 1) > 9) {
+                tmp -= 10;
+                tmp++;
+              }
+            }
+            sum += tmp;
+            i--;
+          }
+          if ((sum % 10) === 0) {
+            return this.invalid;
+          } else {
+            this.set('invalid', true);
+            return this.invalid;
+          }
+        } else {
+          this.set('invalid', true);
+          return this.invalid;
+        }
+      },
+    });
+  </script>
+</dom-module>
