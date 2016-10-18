@@ -1,11 +1,18 @@
 {
   "extends": "eslint:recommended",
-  "env": {
-    "browser": true,
-    "es6": true
-  },
   "rules": {
-    "no-console": "off",
-    "indent": ["error", 2],
+    "no-console": 0
+  },
+  "env": {
+    "browser": true
+  },
+  "plugins": [
+    "html"
+  ],
+  "globals": {
+    "CustomElements": false,
+    "HTMLImports": false,
+    "Polymer": false,
+    "WeakMap": false
   }
 }
