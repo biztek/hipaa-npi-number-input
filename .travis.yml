@@ -1,15 +1,7 @@
 language: node_js
-sudo: required
-before_script:
-- npm install -g bower polylint web-component-tester eslint eslint-plugin-html
-- bower install
-- polylint
-- eslint *.html test/*.html
-env:
-  global:
-- secure: JTPApcu8iFbSzwY3G7jdwC0gT28+a1IvE0Mhdip276VlfX6gUId/09W4G4Jc03i21AjqA4bXIKDjmBdTuwUILc5ZhGDicJON4vmMY3EmaD5JtuItyeJd4IWRtWExzAbtGAoCvfO5CKUY/kjLolGvHI6T0EDnNVwhNT0T912jc7LpOUJUZuAWSaYChFvKSQY5UpOrzAdx+mC7S4r2OoZpNI37aT95RF6jR/cBFCsix8Y9zbD4sf0g31vGnS3z0ZGYKvo+TCuV449aPHs2pK6LA7mth15Ia04OiXjQBXiL/WXSL6afMogDbF10p4hgT0dn707V7xAPNukO81/2LxOziJcKXiu2jm6D4IVtF9BY/M6zTiE8rMHxFAWQKeEMeqVueBT8COtQS+IWTm+k2xLak2MvMX6JT43F72vaHFXeLry8XD99I014RR4mSaYo00yfHFzXaa/yYzMWr2AABKj0YQwdX4+NA9KjI7HiqRxslsZjfMBjbvV8p5r9Ju7RoQCFk/hvO5YNgTbCfrLMxCr3moaEYejUqwZ6T0ZQDOrwt/2t+JXjtXEt535MCnRfI9bXrm1Mk+rbLyZRVUc8G5asm8c9FM9GLzsR1DMVfHNS150iN+OuENVn/HhsnEN46SHFYunplF2vdC4HIRvTSKEyXRXvnY/ACfWGVghzhPIz1Ls=
-- secure: ZZH56/hNnKmvA+XlDYofoWhp+/GbCEqmdu+ESKjELKFdDQxyfeYEuKCYkm8SOS1Qt4ywkC5r7QlJm1R0LKk7HcuV+5En0cYqHNJyEaCr6g2cEmYdB4LnYObr4OVD0q8aZ0T2f8PtH85WMjt+tjjBGePU3OnAlvXXjqfMWzZM5UDbgz7TciUfwQKIhk6JDDa41x+jQnOtPVxkKD7dcy7xKcHC1TfwilhQ9gActsTv6rLPQvTZkZFDQeIXj/b+XGN40KQEkLLYKaMjcQioHOEDDQA6deszJs2xiNTN7IRmvEaFmEnZiSLIZqQHcP3JJXAzjHLcTfwPawxAZvxSd7XuttAbQcMtvPWCeJZ9Mymc2K+EFnVY6mkJgIoJ5GQgsB6flPZceH/Hpp174G0hcj7urA9pcj9ANF4cezaXignWiveAwVQfKP4qLjnZ92vpMKANYuTu7oUqJ0dDWWaUlxQy3xLRKZEJeuscltUJR3j5Ou554ujOFgZ4C2yGnSTRNSVD/JmEmt/9UCcSdBka9dCOd48pltdGDpF79DtXdcjb67fC/9TDdX+jSbTLU4tvyff01sK+WXPCKSnE91VpIxWDfE6/Wjg/Pypd7n3KCdy1g1/18etQbso/cGwSpy96iu0dp7WCQ8d6fwxrUoPUpjbazxBawQOxpw1JvktqXlikKLM=
 node_js: stable
+dist: trusty
+sudo: required
 addons:
   firefox: latest
   apt:
@@ -17,7 +9,16 @@ addons:
     - google-chrome
     packages:
     - google-chrome-stable
+
+before_script:
+- npm install -g bower polylint web-component-tester
+- bower install
+- polylint
+env:
+  global:
+    - SAUCE_USERNAME=rajvenkee
+    - SAUCE_ACCESS_KEY=64abfd16-be86-4221-bb04-9667755e7ee5
+
 script:
-- xvfb-run wct
-- if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then wct -s 'default'; fi
-dist: trusty
+- xvfb-run wct --skip-plugin sauce
+- if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then wct --plugin sauce --skip-plugin local; fi

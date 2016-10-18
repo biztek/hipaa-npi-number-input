@@ -44,8 +44,7 @@
         },
         autoValidate: {
           type: Boolean,
-          value: false,
-          notify: true
+          value: false
         },
         required: {
           type: Boolean,
@@ -67,7 +66,7 @@
       },
       validate: function() {
         let npi = this.value;
-        if (npi) {
+        if (npi && npi.length === 10) {
           let tmp, sum, i, j;
           i = npi.length;
           if ((i === 15) && (npi.indexOf('80840', 0, 5) === 0))
