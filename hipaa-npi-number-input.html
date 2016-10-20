@@ -15,7 +15,7 @@
         display: block;
       }
     </style>
-    <paper-input id="input" label="[[label]]" value="{{value}}" required="[[required]]" auto-validate="[[autoValidate]]" invalid="{{invalid}}" pattern="[[pattern]]" maxlength="[[maxlength]]" error-message="[[errorMessage]]">
+    <paper-input id="input" label="[[label]]" value="{{value}}" required="[[required]]" auto-validate="[[autoValidate]]" invalid="{{invalid}}" pattern="[[pattern]]" maxlength="[[maxlength]]" error-message="[[errorMessage]]" allowed-pattern="[[patternAllowed]]">
     </paper-input>
   </template>
 
@@ -57,6 +57,10 @@
         maxlength: {
           type: Number,
           value: 10
+        },
+        patternAllowed: {
+          type: String,
+          value: '[0-9]'
         }
       },
       _valueChanged: function() {
@@ -65,6 +69,11 @@
         }
       },
       validate: function() {
+        // if (!this.$.input.validate()) {
+        //   this.set('invalid', true);
+        //     console.log("valid1 " + this.invalid);
+        //   return false;
+        // }
         let npi = this.value;
         if (npi && npi.length === 10) {
           let tmp, sum, i, j;
@@ -81,7 +90,7 @@
           while (i !== 0) {
             tmp = npi.charCodeAt(i - 1) - '0'.charCodeAt(0);
             if ((j++ % 2) !== 0) {
-              if ((tmp <<= 1) > 9) {
+              if ((tmp <<= 1) > 9) { //jshint ignore:line
                 tmp -= 10;
                 tmp++;
               }
@@ -90,6 +99,7 @@
             i--;
           }
           if ((sum % 10) === 0) {
+            this.set('invalid', false);
             return this.invalid;
           } else {
             this.set('invalid', true);
