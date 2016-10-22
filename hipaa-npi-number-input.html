@@ -7,7 +7,6 @@
 
 @demo demo/index.html
 -->
-
 <dom-module id="hipaa-npi-number-input">
   <template>
     <style>
@@ -15,7 +14,7 @@
         display: block;
       }
     </style>
-    <paper-input id="input" label="[[label]]" value="{{value}}" required="[[required]]" auto-validate="[[autoValidate]]" invalid="{{invalid}}" pattern="[[pattern]]" maxlength="[[maxlength]]" error-message="[[errorMessage]]" allowed-pattern="[[patternAllowed]]">
+    <paper-input id="input" label="[[label]]" value="{{value}}" required="[[required]]" auto-validate="[[autoValidate]]" invalid="{{invalid}}" pattern="^[0-9]{10}$" maxlength="10" error-message="[[errorMessage]]" allowed-pattern="[0-9]" disabled="[[disabled]]">
     </paper-input>
   </template>
 
@@ -50,17 +49,9 @@
           type: Boolean,
           value: false
         },
-        pattern: {
-          type: String,
-          value: '^[0-9]{10}$'
-        },
-        maxlength: {
-          type: Number,
-          value: 10
-        },
-        patternAllowed: {
-          type: String,
-          value: '[0-9]'
+        disabled: {
+          type: Boolean,
+          value: false
         }
       },
       _valueChanged: function() {
@@ -69,11 +60,10 @@
         }
       },
       validate: function() {
-        // if (!this.$.input.validate()) {
-        //   this.set('invalid', true);
-        //     console.log("valid1 " + this.invalid);
-        //   return false;
-        // }
+        if (!this.$.input.validate()) {
+          this.set('invalid', true);
+          return false;
+        }
         let npi = this.value;
         if (npi && npi.length === 10) {
           let tmp, sum, i, j;
