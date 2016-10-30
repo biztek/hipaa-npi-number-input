@@ -1,10 +1,11 @@
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../paper-input/paper-input.html">
-
+<link rel="import" href="../paper-input/paper-input-behavior.html">
+<link rel="import" href="../paper-input/paper-input-container.html">
+<link rel="import" href="../iron-input/iron-input.html">
+<link rel="import" href="../paper-input/paper-input-error.html">
+<link rel="import" href="../iron-form-element-behavior/iron-form-element-behavior.html">
 <!--
 `hipaa-npi-number-input`
-
-
 @demo demo/index.html
 -->
 <dom-module id="hipaa-npi-number-input">
@@ -14,27 +15,38 @@
         display: block;
       }
     </style>
-    <paper-input id="input" label="[[label]]" value="{{value}}" required="[[required]]" auto-validate="[[autoValidate]]" invalid="{{invalid}}" pattern="^[0-9]{10}$" maxlength="10" error-message="[[errorMessage]]" allowed-pattern="[0-9]" disabled="[[disabled]]">
-    </paper-input>
+
+    <paper-input-container id="container" disabled$="[[disabled]]" always-float-label="[[_computeAlwaysFloatLabel(alwaysFloatLabel,placeholder)]]" invalid="[[invalid]]">
+
+      <label hidden$="[[!label]]">[[label]]</label>
+
+      <input is="iron-input" id="input" aria-labelledby$="[[_ariaLabelledBy]]" aria-describedby$="[[_ariaDescribedBy]]" disabled$="[[disabled]]" bind-value="{{value}}" required$="[[required]]" name$="[[name]]" prevent-invalid-input invalid="{{invalid}}" autofocus$="[[autofocus]]"
+        inputmode$="[[inputmode]]" maxlength$="[[maxlength]]" allowed-pattern="[0-9]">
+
+      <template is="dom-if" if="[[errorMessage]]">
+        <paper-input-error id="error">[[errorMessage]]</paper-input-error>
+      </template>
+
+    </paper-input-container>
   </template>
 
   <script>
     'use strict';
-    Polymer({ //jshint ignore:line
+    Polymer({ // jshint ignore:line
       is: 'hipaa-npi-number-input',
+      behaviors: [
+        Polymer.PaperInputBehavior, // jshint ignore:line
+        Polymer.IronFormElementBehavior // jshint ignore:line
+      ],
       properties: {
         label: {
           type: String,
           value: 'NPI Number'
         },
-        errorMessage: {
-          type: String,
-          value: 'NPI Number is invalid'
-        },
         value: {
           type: String,
           notify: true,
-          observer: '_valueChanged'
+          observer: '_onValueChanged'
         },
         invalid: {
           type: Boolean,
@@ -43,25 +55,61 @@
         },
         autoValidate: {
           type: Boolean,
-          value: false
+          value: false,
+          notify: true
         },
         required: {
           type: Boolean,
-          value: false
+          value: false,
+          notify: true
         },
         disabled: {
           type: Boolean,
           value: false
+        },
+        maxlength: {
+          type: Number,
+          value: 10
+        },
+        validPattern: {
+          type: String,
+          value: '^[0-9]{10}$',
+          observer: '_validPatternChanged'
         }
       },
-      _valueChanged: function() {
+      observers: [
+        '_onFocusedChanged(focused)'
+      ],
+      ready: function() {
+        if (this.value)
+          this._handleAutoValidate();
+      },
+      _onValueChanged: function(value, oldValue) {
+        if (typeof oldValue === 'undefined')
+          return;
         if (this.autoValidate) {
           this.validate();
         }
+        this._handleAutoValidate();
+      },
+      _onFocusedChanged: function(focused) {
+        if (!focused) {
+          this._handleAutoValidate();
+        }
       },
       validate: function() {
+        var valid = this.$.input.validate();
+        if (this.value && this.value.length === 10) {
+          this.invalid = !this._checkIfValid(); // jshint ignore:line
+          this.$.container.invalid = this.invalid;
+          this.set('invalid', this.invalid);
+        } else {
+          this.$.container.invalid = !valid;
+        }
+        return valid;
+      },
+      _checkIfValid: function() {
         if (!this.$.input.validate()) {
-          this.set('invalid', true);
           return false;
         }
         let npi = this.value;
@@ -73,8 +121,7 @@
           else if (i === 10)
             sum = 24;
           else {
-            this.set('invalid', true);
-            return this.invalid;
+            return false;
           }
           j = 0;
           while (i !== 0) {
@@ -89,16 +136,16 @@
             i--;
           }
           if ((sum % 10) === 0) {
-            this.set('invalid', false);
-            return this.invalid;
+            return true;
           } else {
-            this.set('invalid', true);
-            return this.invalid;
+            return false;
           }
         } else {
-          this.set('invalid', true);
-          return this.invalid;
+          return false;
         }
+      },
+      _validPatternChanged: function() {
+        this.$.input.pattern = this.validPattern;
       },
     });
   </script>
