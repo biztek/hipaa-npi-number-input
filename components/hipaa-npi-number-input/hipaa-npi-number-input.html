@@ -1,0 +1,152 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-input/paper-input-behavior.html">
+<link rel="import" href="../paper-input/paper-input-container.html">
+<link rel="import" href="../iron-input/iron-input.html">
+<link rel="import" href="../paper-input/paper-input-error.html">
+<link rel="import" href="../iron-form-element-behavior/iron-form-element-behavior.html">
+<!--
+`hipaa-npi-number-input`
+@demo demo/index.html
+-->
+<dom-module id="hipaa-npi-number-input">
+  <template>
+    <style>
+       :host {
+        display: block;
+      }
+    </style>
+
+    <paper-input-container id="container" disabled$="[[disabled]]" always-float-label="[[_computeAlwaysFloatLabel(alwaysFloatLabel,placeholder)]]" invalid="[[invalid]]">
+
+      <label hidden$="[[!label]]">[[label]]</label>
+
+      <input is="iron-input" id="input" aria-labelledby$="[[_ariaLabelledBy]]" aria-describedby$="[[_ariaDescribedBy]]" disabled$="[[disabled]]" bind-value="{{value}}" required$="[[required]]" name$="[[name]]" prevent-invalid-input invalid="{{invalid}}" autofocus$="[[autofocus]]"
+        inputmode$="[[inputmode]]" maxlength$="[[maxlength]]" allowed-pattern="[0-9]">
+
+      <template is="dom-if" if="[[errorMessage]]">
+        <paper-input-error id="error">[[errorMessage]]</paper-input-error>
+      </template>
+
+    </paper-input-container>
+  </template>
+
+  <script>
+    'use strict';
+    Polymer({ // jshint ignore:line
+      is: 'hipaa-npi-number-input',
+      behaviors: [
+        Polymer.PaperInputBehavior, // jshint ignore:line
+        Polymer.IronFormElementBehavior // jshint ignore:line
+      ],
+      properties: {
+        label: {
+          type: String,
+          value: 'NPI Number'
+        },
+        value: {
+          type: String,
+          notify: true,
+          observer: '_onValueChanged'
+        },
+        invalid: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+        autoValidate: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+        required: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+        disabled: {
+          type: Boolean,
+          value: false
+        },
+        maxlength: {
+          type: Number,
+          value: 10
+        },
+        validPattern: {
+          type: String,
+          value: '^[0-9]{10}$',
+          observer: '_validPatternChanged'
+        }
+      },
+      observers: [
+        '_onFocusedChanged(focused)'
+      ],
+      ready: function() {
+        if (this.value)
+          this._handleAutoValidate();
+      },
+      _onValueChanged: function(value, oldValue) {
+        if (typeof oldValue === 'undefined')
+          return;
+        if (this.autoValidate) {
+          this.validate();
+        }
+        this._handleAutoValidate();
+      },
+      _onFocusedChanged: function(focused) {
+        if (!focused) {
+          this._handleAutoValidate();
+        }
+      },
+      validate: function() {
+        var valid = this.$.input.validate();
+        if (this.value && this.value.length === 10) {
+          this.invalid = !this._checkIfValid(); // jshint ignore:line
+          this.$.container.invalid = this.invalid;
+          this.set('invalid', this.invalid);
+        } else {
+          this.$.container.invalid = !valid;
+        }
+        return valid;
+      },
+      _checkIfValid: function() {
+        if (!this.$.input.validate()) {
+          return false;
+        }
+        let npi = this.value;
+        if (npi && npi.length === 10) {
+          let tmp, sum, i, j;
+          i = npi.length;
+          if ((i === 15) && (npi.indexOf('80840', 0, 5) === 0))
+            sum = 0;
+          else if (i === 10)
+            sum = 24;
+          else {
+            return false;
+          }
+          j = 0;
+          while (i !== 0) {
+            tmp = npi.charCodeAt(i - 1) - '0'.charCodeAt(0);
+            if ((j++ % 2) !== 0) {
+              if ((tmp <<= 1) > 9) { //jshint ignore:line
+                tmp -= 10;
+                tmp++;
+              }
+            }
+            sum += tmp;
+            i--;
+          }
+          if ((sum % 10) === 0) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      },
+      _validPatternChanged: function() {
+        this.$.input.pattern = this.validPattern;
+      },
+    });
+  </script>
+</dom-module>

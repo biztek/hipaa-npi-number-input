@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>hipaa-npi-number-input demo</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+
+  <link rel="import" href="../hipaa-npi-number-input.html">
+
+  <style is="custom-style" include="demo-pages-shared-styles">
+
+  </style>
+</head>
+
+<body>
+  <div class="vertical-section-container centered">
+    <h3>Basic hipaa-npi-number-input Demo</h3>
+    <demo-snippet>
+      <template>
+        <hipaa-npi-number-input></hipaa-npi-number-input>
+      </template>
+    </demo-snippet>
+    <h3>Inputs can validate automatically or on demand, and can have custom error messages</h3>
+    <demo-snippet>
+      <template>
+        <hipaa-npi-number-input label="this input requires some numbers" required auto-validate error-message="Please enter NPI Number"></hipaa-npi-number-input>
+        <hipaa-npi-number-input label="disabled NPI input" disabled></hipaa-npi-number-input>
+        <hipaa-npi-number-input id="inputForValidation" required label="this input is manually validated" error-message="NPI Number is invalid"></hipaa-npi-number-input>
+        <button onclick="validate()">Validate!</button>
+      </template>
+    </demo-snippet>
+  </div>
+  <script>
+    function validate() {
+      document.getElementById('inputForValidation').validate(); //jshint ignore:line
+    }
+  </script>
+</body>
+
+</html>
