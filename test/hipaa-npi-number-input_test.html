@@ -34,6 +34,12 @@
       <hipaa-npi-number-input value="1231231231" auto-validate></hipaa-npi-number-input>
     </template>
   </test-fixture>
+  <test-fixture id="invalidNpiNumber2">
+    <template>
+      <hipaa-npi-number-input value="1234567891"></hipaa-npi-number-input>
+    </template>
+  </test-fixture>
+
   <script>
     suite('hipaa-npi-number-input', function() { //jshint ignore:line
       let element, npiinput, input;
@@ -47,15 +53,15 @@
         assert.equal(npiinput.value, '1234567891'); //jshint ignore:line
       });
       test('setting invalid value for npinumber and check the validation message', function() { //jshint ignore:line
-        npiinput = Polymer.dom(element.root).querySelector('#input'); //jshint ignore:line
-        npiinput.value = '1234567891';
-        npiinput.validate();
-        assert.equal(npiinput.errorMessage, 'NPI Number is invalid'); //jshint ignore:line
+        let npiNumber;
+        npiNumber = fixture('invalidNpiNumber2');
+        npiNumber.validate();
+        assert.isTrue(npiNumber.invalid, 'NPI Number is invalid'); //jshint ignore:line
       });
       test('npinumber value is not set and checking invalid is true', function() { //jshint ignore:line
         input = fixture('noNpiNumber'); //jshint ignore:line
         input.validate();
-        assert.isTrue(input.invalid, 'input is invalid'); //jshint ignore:line
+        assert.isTrue(input.invalid, 'Input is invalid'); //jshint ignore:line
       });
       test('npinumber value is not set will throw errorMessage', function() { //jshint ignore:line
         input = fixture('invalidNpiNumber'); //jshint ignore:line

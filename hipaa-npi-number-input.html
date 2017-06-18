@@ -75,6 +75,10 @@
           type: String,
           value: '^[0-9]{10}$',
           observer: '_validPatternChanged'
+        },
+        errorMessage: {
+          type: String,
+          value: 'NPI Number is invalid'
         }
       },
       observers: [
@@ -105,6 +109,8 @@
           this.set('invalid', this.invalid);
         } else {
           this.$.container.invalid = !valid;
+          this.invalid = true;
+          this.set('invalid', this.invalid);
         }
         return valid;
       },
