@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/biztek/hipaa-npi-number-input.svg?branch=master)](https://travis-ci.org/biztek/hipaa-npi-number-input)
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/biztek/hipaa-npi-number-input)
 
 _[Demo and API docs](https://biztek.github.io/hipaa-npi-number-input/components/hipaa-npi-number-input)_
 
@@ -19,7 +20,8 @@ It includes an optional label,error message,invalid,autovalidate and required at
 <hipaa-npi-number-input autoValidate="boolean value"></hipaa-npi-number-input>
 <hipaa-npi-number-input required="boolean value"></hipaa-npi-number-input>
 ```
-### NPI Numbers Validation.
+### NPI Numbers Validation
+
 A NPI number (NPI Registration Number) is a number assigned to a health care provider.
 
 A valid NPI number consists of: 9 numbers, & last 1 check digit.

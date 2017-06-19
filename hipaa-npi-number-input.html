@@ -111,7 +111,7 @@
           this.$.container.invalid = this.invalid;
           this.set('invalid', this.invalid);
         }
-        return valid;
+        return !this.invalid;
       },
       _checkIfValid: function() {
         if (!this.$.input.validate()) {
