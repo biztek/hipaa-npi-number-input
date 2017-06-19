@@ -53,8 +53,7 @@
         assert.equal(npiinput.value, '1234567891'); //jshint ignore:line
       });
       test('setting invalid value for npinumber and check the validation message', function() { //jshint ignore:line
-        let npiNumber;
-        npiNumber = fixture('invalidNpiNumber2');
+        let npiNumber = fixture('invalidNpiNumber2');
         npiNumber.validate();
         assert.isTrue(npiNumber.invalid, 'NPI Number is invalid'); //jshint ignore:line
       });
