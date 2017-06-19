@@ -20,7 +20,8 @@ It includes an optional label,error message,invalid,autovalidate and required at
 <hipaa-npi-number-input autoValidate="boolean value"></hipaa-npi-number-input>
 <hipaa-npi-number-input required="boolean value"></hipaa-npi-number-input>
 ```
-### NPI Numbers Validation.
+### NPI Numbers Validation
+
 A NPI number (NPI Registration Number) is a number assigned to a health care provider.
 
 A valid NPI number consists of: 9 numbers, & last 1 check digit.
@@ -40,3 +41,7 @@ tasks such as auto-validating and label styling when the `bind-value` changes.
 
 If the `auto-validate` attribute is set, element validates the input whether it is HIPAA compliant NPI number and update
 the label styling when the input value changes.
+
+### License
+
+Licensed under [Apache 2.0](LICENSE).
