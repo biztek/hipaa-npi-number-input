@@ -75,6 +75,10 @@
           type: String,
           value: '^[0-9]{10}$',
           observer: '_validPatternChanged'
+        },
+        errorMessage: {
+          type: String,
+          value: 'NPI Number is invalid'
         }
       },
       observers: [
@@ -98,15 +102,16 @@
         }
       },
       validate: function() {
-        var valid = this.$.input.validate();
-        if (this.value && this.value.length === 10) {
+        if (this.$.input.validate() && this.value && this.value.length === 10) {
           this.invalid = !this._checkIfValid(); // jshint ignore:line
           this.$.container.invalid = this.invalid;
           this.set('invalid', this.invalid);
         } else {
-          this.$.container.invalid = !valid;
+          this.invalid = true;
+          this.$.container.invalid = this.invalid;
+          this.set('invalid', this.invalid);
         }
-        return valid;
+        return !this.invalid;
       },
       _checkIfValid: function() {
         if (!this.$.input.validate()) {
