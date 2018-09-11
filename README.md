@@ -4,6 +4,10 @@
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/biztek_opensource_sauce.svg)](https://saucelabs.com/u/biztek_opensource_sauce)
 
+[![Published on Vaadin  Directory](https://img.shields.io/badge/Vaadin%20Directory-published-00b4f0.svg)](https://vaadin.com/directory/component/biztekhipaa-npi-number-input)
+
+[![Stars on vaadin.com/directory](https://img.shields.io/vaadin-directory/star/biztekhipaa-npi-number-input.svg)](https://vaadin.com/directory/component/biztekhipaa-npi-number-input)
+
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/biztek/hipaa-npi-number-input)
 
 _[Demo and API docs](https://biztek.github.io/hipaa-npi-number-input/components/hipaa-npi-number-input)_
